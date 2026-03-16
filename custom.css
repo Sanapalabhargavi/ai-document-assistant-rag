@@ -1,0 +1,125 @@
+/* public/custom.css — ChatGPT-like dark theme for Chainlit */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-primary:    #0f0f10;
+  --bg-secondary:  #1a1a1d;
+  --bg-sidebar:    #111114;
+  --bg-card:       #1e1e22;
+  --bg-input:      #2a2a2f;
+  --accent:        #6c63ff;
+  --accent-light:  #8b85ff;
+  --accent-glow:   rgba(108, 99, 255, 0.25);
+  --text-primary:  #f0f0f5;
+  --text-secondary:#9999aa;
+  --text-muted:    #55556a;
+  --border:        rgba(255,255,255,0.07);
+  --radius:        12px;
+}
+
+* { font-family: 'Sora', sans-serif !important; }
+code, pre { font-family: 'JetBrains Mono', monospace !important; }
+
+/* ─── Global background ─────────────────────────────── */
+body, #root {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ─── Sidebar ────────────────────────────────────────── */
+.sidebar, [class*="sidebar"], nav {
+  background: var(--bg-sidebar) !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+/* ─── Buttons ────────────────────────────────────────── */
+button[class*="new-chat"], button[class*="NewChat"] {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-radius: var(--radius) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  transition: box-shadow 0.2s !important;
+}
+button[class*="new-chat"]:hover {
+  box-shadow: 0 0 16px var(--accent-glow) !important;
+}
+
+/* ─── Chat history items ────────────────────────────── */
+[class*="history"] a, [class*="chat-item"] {
+  border-radius: 8px !important;
+  transition: background 0.15s !important;
+}
+[class*="history"] a:hover, [class*="chat-item"]:hover {
+  background: rgba(108,99,255,0.12) !important;
+}
+
+/* ─── Messages ───────────────────────────────────────── */
+[class*="message"] {
+  background: transparent !important;
+}
+[class*="assistant"][class*="message"] > div {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 16px 20px !important;
+}
+
+/* ─── Input area ─────────────────────────────────────── */
+textarea, [class*="input"] textarea {
+  background: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  font-size: 0.95rem !important;
+}
+textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-glow) !important;
+  outline: none !important;
+}
+
+/* ─── Welcome / starters ─────────────────────────────── */
+[class*="starter"], [class*="Starter"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+[class*="starter"]:hover, [class*="Starter"]:hover {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 12px var(--accent-glow) !important;
+}
+
+/* ─── Markdown inside answers ────────────────────────── */
+[class*="message"] h3 {
+  color: var(--accent-light) !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+[class*="message"] ul, [class*="message"] p {
+  color: var(--text-primary) !important;
+  line-height: 1.7 !important;
+}
+[class*="message"] hr {
+  border-color: var(--border) !important;
+  margin: 12px 0 !important;
+}
+[class*="message"] strong {
+  color: #fff !important;
+}
+[class*="message"] em {
+  color: var(--text-secondary) !important;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 10px;
+}

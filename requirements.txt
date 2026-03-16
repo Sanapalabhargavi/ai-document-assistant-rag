@@ -1,0 +1,11 @@
+chainlit>=1.0.0
+langchain
+langchain-community
+langchain-text-splitters
+faiss-cpu
+sentence-transformers
+transformers
+pypdf
+supabase
+python-dotenv
+torch

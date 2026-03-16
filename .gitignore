@@ -1,0 +1,7 @@
+.env
+.files/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+ai-document-assistant-demo.mp4
+ai-document-assistant-demo.zip
