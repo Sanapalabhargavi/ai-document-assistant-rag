@@ -16,7 +16,11 @@ Features implemented:
 """
 
 import uuid
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import chainlit as cl
+
+_executor = ThreadPoolExecutor(max_workers=1)
 
 from database import (
     create_chat,
@@ -172,24 +176,46 @@ async def on_message(message: cl.Message):
         await _clear_history(chat_id)
         return
 
+    # ── Natural language trigger matching ─────────────────────────────────────
+    q_lower = query.lower().strip()
+
+    _SUMMARISE_TRIGGERS = [
+        _STARTER_SUMMARISE, "summarise", "summarize", "summarise the document",
+        "summarize the document", "summary", "give me a summary",
+        "what is this document about", "overview"
+    ]
+    _KEYWORD_TRIGGERS = [
+        _STARTER_KEYWORDS, "extract keywords", "keywords", "extract keywords & topics",
+        "extract key words", "show keywords", "key topics", "main topics",
+        "what are the keywords", "topics"
+    ]
+
+    if q_lower in [t.lower() for t in _SUMMARISE_TRIGGERS]:
+        query = _STARTER_SUMMARISE
+    elif q_lower in [t.lower() for t in _KEYWORD_TRIGGERS]:
+        query = _STARTER_KEYWORDS
+
     # ── Starter: Summarise ────────────────────────────────────────────────────
     if query == _STARTER_SUMMARISE:
         if not has_document(chat_id):
             await _no_doc_warning()
             return
-        thinking = await cl.Message(content="⏳ Generating summary…").send()
-        answer = summarise_document(chat_id)
+        thinking = await cl.Message(content="⏳ Generating summary… *(this may take 1-2 min on CPU)*").send()
+        loop = asyncio.get_event_loop()
+        answer = await loop.run_in_executor(_executor, summarise_document, chat_id)
         await thinking.remove()
         await _stream_and_save(answer, chat_id)
         return
 
     # ── Starter: Keywords ────────────────────────────────────────────────────
-    if query == _STARTER_KEYWORDS:
+    _kw_triggers = ["keyword", "keywords", "topics", "extract keyword", "extract keywords", "key words", "key topics"]
+    if query == _STARTER_KEYWORDS or any(t in query.lower() for t in _kw_triggers):
         if not has_document(chat_id):
             await _no_doc_warning()
             return
         thinking = await cl.Message(content="⏳ Extracting keywords…").send()
-        answer = extract_keywords(chat_id)
+        loop = asyncio.get_event_loop()
+        answer = await loop.run_in_executor(_executor, extract_keywords, chat_id)
         await thinking.remove()
         await _stream_and_save(answer, chat_id)
         return
@@ -199,8 +225,9 @@ async def on_message(message: cl.Message):
         await _no_doc_warning()
         return
 
-    thinking = await cl.Message(content="⏳ Searching document…").send()
-    answer, _ = ask_question(query, chat_id)
+    thinking = await cl.Message(content="⏳ Searching document… *(this may take 1-2 min on CPU)*").send()
+    loop = asyncio.get_event_loop()
+    answer, _ = await loop.run_in_executor(_executor, ask_question, query, chat_id)
     await thinking.remove()
     await _stream_and_save(answer, chat_id)
 
@@ -224,7 +251,8 @@ async def _handle_pdf_upload(element, chat_id: str):
             file_bytes = element.content
         else:
             raise ValueError("Cannot read uploaded file.")
-        page_count = process_document(file_bytes, chat_id)
+        loop = asyncio.get_event_loop()
+        page_count = await loop.run_in_executor(_executor, process_document, file_bytes, chat_id)
         cl.user_session.set("doc_loaded", True)
 
         # Persist metadata to Supabase
