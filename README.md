@@ -1,6 +1,38 @@
-# 📄 AI Document Assistant (RAG-Based)
+# 🚀 AI Document Assistant (RAG-Based)
 
-A ChatGPT-style document Q&A app built with **Chainlit**, **LangChain**, **FAISS**, and **Supabase** (free tier).
+An intelligent **ChatGPT-style document Q&A system** that allows users to upload PDFs and ask questions using **Retrieval-Augmented Generation (RAG)**.
+
+---
+
+## 📌 Overview
+This project combines **semantic search + large language models** to retrieve relevant document content and generate accurate, source-based answers.
+
+It is designed to simulate a **real-world AI assistant for documents** such as research papers, legal files, and reports.
+
+---
+
+## 🧠 Key Features
+- 📄 Upload and analyze PDF documents  
+- ❓ Ask questions about document content  
+- 📊 AI-generated answers with source references  
+- 📝 Automatic document summarization  
+- 🏷️ Keyword extraction  
+- 💾 Chat history persistence using Supabase  
+- 🔁 Resume previous conversations  
+
+---
+
+## 🛠 Tech Stack
+- **Python**
+- **Chainlit** (UI)
+- **LangChain** (RAG pipeline)
+- **FAISS** (vector database)
+- **HuggingFace Transformers** (LLM + embeddings)
+- **Supabase** (database)
+
+---
+
+## 🧱 RAG Architecture
 
 ---
 
